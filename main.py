@@ -3,26 +3,22 @@ import cohere
 
 
 # Set the page configuration as the first command
-st.set_page_config(page_title="AI Learning Roadmap", page_icon="📚", layout="wide")
+
+st.set_page_config(page_title="AI Study Plan Generator", page_icon="📚", layout="wide")
 
 # Initialize Cohere API with your API key
 API_KEY = 'bPokOB6tPxnyyJJR2XNeXTTGHyUHB3m98SsHVFDg'  # Replace 'YOUR_API_KEY' with your actual Cohere API key
 co = cohere.Client(API_KEY)
 
-def generate_roadmap(domain):
+def generate_roadmap(domain,time):
     # Updated prompt with better structure for clear sectioning
-    prompt = f"""
-    Create a detailed learning roadmap for the domain {domain}. The roadmap should include:
-    - 1. **Introduction**: Brief overview of the domain and its importance.
-    - 2. **Core Learning**: Key tools, languages, and technologies to master.
-    - 3. **Key Milestones**: Essential skills to aim for and learn at each stage.
-    - 4. **Projects**: Practical projects to build and apply the concepts.
-    - 5. **Advanced Topics**: Additional topics for specialization and deepening knowledge.
-    - 6. **Final Tips**: Summary of how to continue learning and advancing in the field.
-    
-    Please make sure to clearly label each section with a title followed by concise details for learners,
+    prompt = f"""Create a detailed study plan for {domain} for a total of {time} hours. The plan should break down the subject into key topics, allocate time for each topic, and include time for revision and practice problems if there was any. Prefer short study sessions with breaks in between. Please provide a structured schedule that covers the entire subject {domain} effectively.
 
-    dont include any bold , italian or any typograpic .
+    Please make sure to clearly label each section with a title followed by concise details for learners,
+    
+    please note it importantly
+    dont include any bold , italian or any typograpic ,
+    dont include symbols like # * etc,
     """
 
     # Call Cohere API to generate the roadmap
@@ -51,18 +47,19 @@ def parse_roadmap(roadmap_text):
     return parsed_sections
 
 # Streamlit UI
-st.title("AI-Powered Roadmap Generator")
-st.markdown("Enter a domain (e.g., Web Development, Data Science) to generate a learning roadmap with glassmorphism design.")
+st.title("AI-Powered Study Plan Generator")
+st.markdown("Enter the topic: ")
 
 # Input field for domain
-domain = st.text_input("Enter the domain:")
+domain = st.text_input("Please specify your Subject:")
+time = st.text_input("Please specify your time [hours]:")
 
 # Button to generate roadmap
-if st.button("Generate Roadmap"):
+if st.button("Generate Study Plan"):
     if domain:
-        with st.spinner("Generating roadmap..."):
+        with st.spinner("Generating Study Plan..."):
             # Generate and parse the roadmap
-            roadmap_text = generate_roadmap(domain)
+            roadmap_text = generate_roadmap(domain,time)
             parsed_roadmap = parse_roadmap(roadmap_text)
 
             # Custom CSS for glassmorphism and white headings
@@ -157,4 +154,4 @@ if st.button("Generate Roadmap"):
                         st.markdown('<div class="arrow"></div>', unsafe_allow_html=True)
 
     else:
-        st.warning("Please enter a domain to generate the roadmap.")
+        st.warning("Please enter a Topic to generate the studyplan .")
