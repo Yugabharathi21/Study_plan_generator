@@ -31,7 +31,7 @@ def generate_job_suggestions(answers):
             prompt=(
                 f"Based on the following inputs, suggest freelancing job opportunities:\n"
                 f"{combined_answers}\n"
-                f"Provide clear and specific job titles, matching the user's skills and preferences."
+                f"Provide clear and specific job titles, matching the user's skills and preferences. if the answers were inapproprate or just garbage values , ask the ser to input correct values"
             ),
             max_tokens=100,
             temperature=0.8,
@@ -45,7 +45,7 @@ def generate_job_suggestions(answers):
         return f"Error generating suggestions: {e}"
 
 # Display the current question
-st.title("Freelancing Job Suggestions")
+st.title("AI Powered Skill Assessment Test:")
 question_label = st.text(questions[st.session_state.current_step])
 
 # Input box for user answer
@@ -63,18 +63,14 @@ if st.button("Next"):
         
         if st.session_state.current_step < len(questions):
             # Display the next question
-            st.experimental_rerun()
+            st.rerun()  # Use st.rerun() to refresh the app
         else:
             # Generate suggestions based on all answers
             st.write("Generating job suggestions based on your inputs...")
             suggestions = generate_job_suggestions(st.session_state.answers)
             st.write("Job Suggestions:\n")
             st.write(suggestions)
-            # Reset the flow
-            reset_flow()
-
-# Reset the session state and UI for a new interaction
-def reset_flow():
-    st.session_state.answers = []
-    st.session_state.current_step = 0
-    st.experimental_rerun()
+            
+            # Do not reset the state and leave the result on the screen
+            st.session_state.answers = []  # Optionally reset answers here if needed
+            st.session_state.current_step = 0  # Optionally reset current_step here if needed
